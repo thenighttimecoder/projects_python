@@ -1,44 +1,28 @@
-
 #imports of stuff
 import random as r
 import time as t
 import copy as c
 
-
-#the list of cards vaule
+#the list of cards value
 card_list_1=[1,2,3,4,5,6,7,8,9,10,10,10]
 card_list_2=[1,2,3,4,5,6,7,8,9,10,10,10]
 card_list_3=[1,2,3,4,5,6,7,8,9,10,10,10]
 card_list_4=[1,2,3,4,5,6,7,8,9,10,10,10]
-#save of all the cards
+
+#save of all the cards and to "shuffle" them
 save_card_list_1=c.deepcopy(card_list_1)
 save_card_list_2=c.deepcopy(card_list_2)
 save_card_list_3=c.deepcopy(card_list_3)
 save_card_list_4=c.deepcopy(card_list_4)
 
+#how we pick what list to use
 deck_list=[
   card_list_1,
   card_list_2,
   card_list_3,
   card_list_4
 ]
-#money
-money=100
-bet=0
-#hand of the player
-hand_see=[]
-ace_hand=0
-#hand of dealer
-dealer_see=[]
-ace_dealer=0
-#temp list 
-temp_list_h=[]
-temp_list_d=[]
-#temp place holder
-temp=0
-temp2=0
-temp3=0
-temp4=0
+
 #the list of the card names
 card_list_type=[
  "♥♥",
@@ -47,294 +31,308 @@ card_list_type=[
   "♠♠"
 ]
 
+#money
+money=100
+bet=0
 
-#the list of funtation
+#hand of the player
+hand_see=[]
+num_hand=[]
+ace_hand=0
+
+#hand of the dealer
+dealer_see=[]
+num_dealer=[]
+ace_dealer=0
+#temp placeholder
+
+""" the list of functions """
+#the function to "shuffle" the list/restore the list
 def suffle_card():
-  print("too little cards in deck suffaling")
-  print("suffaling")
+  print("too little cards in deck shuffling")
+  print("shuffling")
+  #the backup list
   c.deepcopy(save_card_list_1)
   c.deepcopy(save_card_list_2)
   c.deepcopy(save_card_list_3)
   c.deepcopy(save_card_list_4)
   t.sleep(2)
-  print("suffal done")
-  
+  print("shuffle done")
+
+#to get which list to use
 def random_3():
-  if (
-        (len(card_list_1) < 3 and len(card_list_2) < 3 and 
-         len(card_list_3) < 3 and len(card_list_4) < 3) 
-        or (sum(card_list_1) <= 10 and sum(card_list_2) <= 10 and
-            sum(card_list_3) <= 10 and sum(card_list_4) <= 10)
-    ):
+  #to check all the card lists have 3 or more cards
+  if ((len(card_list_1) < 3 and len(card_list_2) < 3 and 
+       len(card_list_3) < 3 and len(card_list_4) < 3) or
+  #to check all the card lists have the sum of 10 or more
+      (sum(card_list_1) <= 10 and sum(card_list_2) <= 10 and
+       sum(card_list_3) <= 10 and sum(card_list_4) <= 10)
+    ):#restarts the deck and only the decks
     suffle_card()
-  localtemp = r.randint(0,3)
-  if localtemp == 0:
-    while len(card_list_1)-1 < 2:
-      random_3()
-  if localtemp ==1:
+  deck_list_picker = r.randint(0,3)
+  if deck_list_picker == 0:
+    while len(card_list_1)-1 < 2:#makes sure that there is cards in the deck
+      random_3()#repets until it picks a with cards in the deck
+  if deck_list_picker ==1:
     while len(card_list_2)-1 < 2:
       random_3()
-  if localtemp ==2:
+  if deck_list_picker ==2:
     while len(card_list_3)-1 < 2:
       random_3()
-  if localtemp == 3:
+  if deck_list_picker == 3:
     while len(card_list_4)-1 < 2:
       random_3()
-  return localtemp
+  return deck_list_picker
 
-
-  #to get a random number
+#to get a random number for the card
 def random_12():
-  localtemp=random_3()
-  if localtemp == 0:
-    temp = r.randint(0,(len(card_list_1)-1))
-    return temp
-  elif localtemp==1:
-    temp=r.randint(0,(len(card_list_2)-1))
-    return temp
-  elif localtemp==2:
-    temp=r.randint(0,(len(card_list_3)-1))
-    return temp
-  elif localtemp==3:
-    temp=r.randint(0,(len(card_list_4)-1))
-    return temp
+  deck_list_picker=random_3()
+  if deck_list_picker == 0: 
+    #picks a random "card" from the list
+    card_picker = r.randint(0,(len(card_list_1)-1))
+    return card_picker
+  elif deck_list_picker==1:
+    card_picker=r.randint(0,(len(card_list_2)-1))
+    return card_picker
+  elif deck_list_picker==2:
+    card_picker=r.randint(0,(len(card_list_3)-1))
+    return card_picker
+  elif deck_list_picker==3:
+    card_picker=r.randint(0,(len(card_list_4)-1))
+    return card_picker
 
-  
-  #the way we get the which list to chose from
+#to draw the card into our hand
 def hand_draw():
   global ace_hand
-  localtemp=random_3()
-  temp=random_12()
-  temp2=sum(temp_list_d)
-  #if statment to get the list choice
-  if temp is not None and temp>=0 and temp<=12 :
-    if temp2 >21:
-      print("you lose \n")
-      playing()
-    if localtemp==0:
-      if card_list_1[temp-1]==1:
-        hand_see.append(card_list_type[localtemp])
+  deck_list_picker=random_3()
+  card_pick=random_12()
+  #adds the card to the hand
+  if card_pick is not None:
+    #to check if the card is an ace
+    if deck_list_picker==0:
+      if card_list_1[card_pick-1]==1:
+        #adds style to card
+        hand_see.append(card_list_type[deck_list_picker])
         hand_see.append("aces")
         ace_hand=ace_hand+1
-        temp_list_h.append(1)
-        card_list_1.pop(temp-1)
-        if temp2>21:
-          print("you lose \n")
-          playing()
+        num_hand.append(1)
+        card_list_1.pop(card_pick-1)
       else:
-        hand_see.append(card_list_type[localtemp])
-        hand_see.append(card_list_1[temp-1])
-        temp_list_h.append(card_list_1[temp-1])
-        card_list_1.pop(temp-1)
-        if temp2>21:
-          print("you lose \n")
-          playing()
-    elif localtemp==1:
-      if card_list_2[temp-1]==1:
-        hand_see.append(card_list_type[localtemp])
+        hand_see.append(card_list_type[deck_list_picker])
+        #adds the card from the chosen list to the hand
+        hand_see.append(card_list_1[card_pick-1])
+        num_hand.append(card_list_1[card_pick-1])
+        #pops the card from the chosen list to make it have fewer cards
+        card_list_1.pop(card_pick-1)
+    elif deck_list_picker==1:
+      #to check if the card is an ace
+      if card_list_2[card_pick-1]==1:
+        hand_see.append(card_list_type[deck_list_picker])
         hand_see.append("aces")
         ace_hand=ace_hand+1
-        temp_list_h.append(1)
-        card_list_2.pop(temp-1)
-        if temp2>21:
-          print("you lose \n")
-          playing()
+        num_hand.append(1)
+        #pops the card from the chosen list to make it have fewer cards
+        card_list_2.pop(card_pick-1)
       else:
-        hand_see.append(card_list_type[localtemp])
-        hand_see.append(card_list_2[temp-1])
-        temp_list_h.append(card_list_2[temp-1])
-        card_list_2.pop(temp-1)
-        if temp2>21:
-          print("you lose \n")
-          playing()
-    elif localtemp==2:
-      if card_list_3[temp-1]==1:
-        hand_see.append(card_list_type[localtemp])
+        hand_see.append(card_list_type[deck_list_picker])
+        #adds the card from the chosen list to the hand
+        hand_see.append(card_list_2[card_pick-1])
+        num_hand.append(card_list_2[card_pick-1])
+        #pops the card from the chosen list to make it have fewer cards
+        card_list_2.pop(card_pick-1)
+    elif deck_list_picker==2:
+      #to check if the card is an ace
+      if card_list_3[card_pick-1]==1:
+        hand_see.append(card_list_type[deck_list_picker])
         hand_see.append("aces")
         ace_hand=ace_hand+1
-        temp_list_h.append(1)
-        card_list_3.pop(temp-1)
-        if temp2>21:
-          print("you lose \n")
-          playing()
+        num_hand.append(1)
+        #pops the card from the chosen list to make it have fewer cards
+        card_list_3.pop(card_pick-1)
       else:
-        hand_see.append(card_list_type[localtemp])
-        hand_see.append(card_list_3[temp-1])
-        temp_list_h.append(card_list_3[temp-1])
-        card_list_3.pop(temp-1)
-        if temp2>21:
-          print("you lose \n")
-          playing()
-    elif localtemp==3:
-      if card_list_4[temp-1]==1:
-        hand_see.append(card_list_type[localtemp])
+        hand_see.append(card_list_type[deck_list_picker])
+        #adds the card from the chosen list to the hand
+        hand_see.append(card_list_3[card_pick-1])
+        num_hand.append(card_list_3[card_pick-1])
+        #pops the card from the chosen list to make it have fewer cards
+        card_list_3.pop(card_pick-1)
+    elif deck_list_picker==3:
+      #to check if the card is an ace
+      if card_list_4[card_pick-1]==1:
+        hand_see.append(card_list_type[deck_list_picker])
         hand_see.append("aces")
         ace_hand=ace_hand+1
-        temp_list_h.append(1)
-        card_list_4.pop(temp-1)
-        if temp2>21:
-          print("you lose \n")
-          playing()
+        num_hand.append(1)
+        #pops the card from the chosen list to make it have fewer cards
+        card_list_4.pop(card_pick-1)
       else:
-        hand_see.append(card_list_type[localtemp])
-        hand_see.append(card_list_4[temp-1])
-        temp_list_h.append(card_list_4[temp-1])
-        card_list_4.pop(temp-1)
-        if temp2>21:
-          print("you lose \n")
-          playing()
+        hand_see.append(card_list_type[deck_list_picker])
+        #adds a card from the choice list to hand
+        hand_see.append(card_list_4[card_pick-1])
+        num_hand.append(card_list_4[card_pick-1])
+        #pops the card from the chosen list to make it have fewer cards
+        card_list_4.pop(card_pick-1)
   return hand_see
-  
+
+#to draw a card into the dealer's hand
 def dealer_draw():
   global ace_dealer 
   global money
   global bet
-  localtemp=random_3()
-  temp=random_12()
-  #if statment to get the list choice
-  if temp is not None and temp>=0 and temp<=12 :
-    if localtemp==0:
-      if card_list_1[temp-1]==1:
-        dealer_see.append(card_list_type[localtemp])
+  deck_list_picker=random_3()
+  card_picker=random_12()
+  #if statement to get the list choice
+  if card_picker is not None:
+    if deck_list_picker==0:
+      #to check if the card is an ace
+      if card_list_1[card_picker-1]==1:
+        #adds the style of the card
+        dealer_see.append(card_list_type[deck_list_picker])
         dealer_see.append("aces")
-        temp_list_d.append(1)
-        card_list_1.pop(temp-1)
+        num_dealer.append(1)
+        card_list_1.pop(card_picker-1)
         ace_dealer=ace_dealer+1 
       else:
-        dealer_see.append(card_list_type[localtemp])
-        dealer_see.append(card_list_1[temp-1])
-        temp_list_d.append(card_list_1[temp-1])
-        card_list_1.pop(temp-1)
-    elif localtemp==1:
-      if card_list_2[temp-1]==1:
-        dealer_see.append(card_list_type[localtemp])
+        dealer_see.append(card_list_type[deck_list_picker])
+        #adds the card from the chosen list to the hand
+        dealer_see.append(card_list_1[card_picker-1])
+        num_dealer.append(card_list_1[card_picker-1])
+        #pops the card from the chosen list to make it have fewer cards
+        card_list_1.pop(card_picker-1)
+    elif deck_list_picker==1:
+      if card_list_2[card_picker-1]==1:
+        dealer_see.append(card_list_type[deck_list_picker])
         ace_dealer=ace_dealer+1
         dealer_see.append("aces")
-        temp_list_d.append(1)
-        card_list_2.pop(temp-1)
+        num_dealer.append(1)
+        #pops the card from the chosen list to make it have fewer cards
+        card_list_2.pop(card_picker-1)
       else:
-        dealer_see.append(card_list_type[localtemp])
-        dealer_see.append(card_list_2[temp-1])
-        temp_list_d.append(card_list_2[temp-1])
-        card_list_2.pop(temp-1)
-    elif localtemp==2:
-      if card_list_3[temp-1]==1:
-        dealer_see.append(card_list_type[localtemp])
+        dealer_see.append(card_list_type[deck_list_picker])
+        #adds the card from the chosen list to the hand
+        dealer_see.append(card_list_2[card_picker-1])
+        num_dealer.append(card_list_2[card_picker-1])
+        #chosen the card from the chosen list to make it have fewer cards
+        card_list_2.pop(card_picker-1)
+    elif deck_list_picker==2:
+      if card_list_3[card_picker-1]==1:
+        dealer_see.append(card_list_type[deck_list_picker])
         ace_dealer=ace_dealer+1
         dealer_see.append("aces")
-        temp_list_d.append(1)
-        card_list_3.pop(temp-1)
+        num_dealer.append(1)
+        #pops the card from the chosen list to make it have fewer cards
+        card_list_3.pop(card_picker-1)
       else:
-        dealer_see.append(card_list_type[localtemp])
-        dealer_see.append(card_list_3[temp-1])
-        temp_list_d.append(card_list_3[temp-1])
-        card_list_3.pop(temp-1)
-    elif localtemp==3:  
-      if card_list_4[temp-1]==1:
+        dealer_see.append(card_list_type[deck_list_picker])
+        #adds the card from the chosen list to the hand
+        dealer_see.append(card_list_3[card_picker-1])
+        num_dealer.append(card_list_3[card_picker-1])
+        #pops the card from the chosen list to make it have fewer cards
+        card_list_3.pop(card_picker-1)
+    elif deck_list_picker==3:  
+      if card_list_4[card_picker-1]==1:
         ace_dealer=ace_dealer+1
-        dealer_see.append(card_list_type[localtemp])
+        dealer_see.append(card_list_type[deck_list_picker])
         dealer_see.append("aces")
-        temp_list_d.append(1)
-        card_list_4.pop(temp-1)
+        num_dealer.append(1)
+        #pops the card from the chosen list to make it have fewer cards
+        card_list_4.pop(card_picker-1)
       else:
-        dealer_see.append(card_list_type[localtemp])
-        dealer_see.append(card_list_4[temp-1])
-        temp_list_d.append(card_list_4[temp-1])
-        card_list_4.pop(temp-1)
+        dealer_see.append(card_list_type[deck_list_picker])
+        #adds the card from the chosen list to the hand
+        dealer_see.append(card_list_4[card_picker-1])
+        num_dealer.append(card_list_4[card_picker-1])
+        #pops the card from the chosen list to make it have fewer cards
+        card_list_4.pop(card_picker-1)
   return dealer_see
 
-def hand_check(temp_list_h):
-  temp2=sum(temp_list_h)
-  temp=0
-  if ace_hand >=1:
-    temp=sum(temp_list_h)+10
-  if (temp2 >21 and ace_hand ==0) or (temp2 > 21 and ace_hand >=1 and temp> 21) :
-    print("you lose \n")
-    playing()
-  else:
-    player_turn()
-    
-  
-  
-    
-
-def playing():
-  ch=input("do you want to play again?\n")
-  if ch=="yes" or ch=="y":
-    hand_see.clear()
-    ace_hand=0
-    dealer_see.clear()
-    ace_dealer=0
-    temp_list_h.clear()
-    temp_list_d.clear()
-    temp=0
-    temp2=0
-    temp3=0
-    temp4=0
-    main()
-  else:
-    print("bye")
-    exit()
-  
+#to let us draw cards multiple times
 def drawer(choice):
   if choice=="hit":
     print("drawing \n")
     t.sleep(2)
     hand_draw()
     print_h()
-    hand_check(temp_list_h)
+    hand_check(num_hand)
 
+#to print the sum of num hand 
 def print_h():
-  temp=sum(temp_list_h)
+  temp_hand=sum(num_hand)
   print("your hand is",hand_see, "\n")
-  if ace_hand >=1:
-    temp = sum(temp_list_h)
-    temp2=sum(temp_list_h)+10
-    print("your sum is",temp,"or",temp2,"\n")
+  if ace_hand >=1:#checks is we have aces
+    temp_hand_a=sum(num_hand)+(10*ace_hand)
+    #print both 1 and 11 with the ace
+    print("your sum is",temp_hand,"or",temp_hand_a,"\n")
   else:
-    print("your sum is",temp,"\n")
+    print("your sum is",temp_hand,"\n")
 
+#prints the sum of the dealer's hand
 def print_d():
   print("the dealers hand is",dealer_see,"\n")
-  temp=sum(temp_list_d)
-  if ace_dealer >=1:
-    temp = sum(temp_list_d)
-    temp2=sum(temp_list_d)+10
-    print("dealer sum is",temp,"or",temp2,"\n")
+  temp_dealer=sum(num_dealer)
+  if ace_dealer >=1:#checks is have as aces
+    temp_dealer_a=sum(num_dealer)+(10*ace_dealer)
+    #print both 1 and 11 with the ace
+    print("dealer sum is",temp_dealer,"or",temp_dealer_a,"\n")
   else:
-    print("dealer sum is",temp,"\n")
+    print("dealer sum is",temp_dealer,"\n")
 
-def dealer_turn(i):
+#checka the sum of our hand
+def hand_check(num_hand):
+  temp_hand=sum(num_hand)
+  temp_hand_a=0
+  if ace_hand >=1:
+    temp_hand_a=sum(num_hand)+(10*ace_hand)
+  #checks to make sure we didn't bust heh
+  if (temp_hand >21 and ace_hand ==0) or\
+  (temp_hand > 21 and ace_hand >=1 and temp_hand_a> 21) :
+    print("you lose \n")
+    playing()
+  else:
+    player_turn()
+
+#to move the game to the dealer turn
+def dealer_turn():
   global money
   global bet
-  temp2=0
-  temp4=0
-  i=0
+  temp_dealer=sum(num_dealer)
+  temp_dealer_a=0
   if ace_dealer >=1:
-    temp2=sum(temp_list_d)+10
-  if ace_hand>=1:
-    temp4=sum(temp_list_h)+10
+    temp_dealer_a=sum(num_dealer)+(10*ace_dealer)
+  temp_hand=sum(num_hand)
+  temp_hand_a=0
+  if ace_hand >=1:
+    temp_hand_a=sum(num_hand)+(10*ace_hand)
+#check if we won or lost
+  i=0
   if i==0:
+    #only happens if once a game
     print("dealers turn \n")
     dealer_see.pop()
     i=1+i
-  if sum(temp_list_d) > 21:
+  #checks if the dealer has a sum of 17 or more
+  if temp_dealer > 21 or temp_dealer > 17:
     print("you win \n")
     money=money+(bet*2)
     playing()
-  elif (sum(temp_list_d)==sum(temp_list_h) and ace_dealer==0 and ace_hand==0) or ((temp2==temp4) and ace_hand >=1 and ace_dealer >=1) :
+  #checks if the dealer has a sum the same as ours w/o an ace
+  elif (temp_dealer==temp_hand and ace_dealer==0 and ace_hand==0) or \
+  ((temp_dealer_a==temp_hand_a) and ace_hand >=1 and ace_dealer >=1) :
     print("tie")
     money=money+bet
     playing()
-  elif sum(temp_list_d) > sum(temp_list_h) and sum(temp_list_d) < 21:
+  #checks if the dealer has a sum greater than ours and is less than 21
+  elif temp_dealer > temp_hand and temp_dealer < 21:
     print("dealer won \n")
     playing()
-  elif sum(temp_list_d) < sum(temp_list_h):
+  #checks if the dealer has a sum less than ours and is than then 17
+  elif (temp_dealer < temp_hand and temp_dealer < 17):
     dealer_draw()
+    t.sleep(1)
     print_d()
-    dealer_turn(i)
+    dealer_turn()
 
-
+#to start our turn
 def player_turn():
   global money
   global bet
@@ -342,15 +340,36 @@ def player_turn():
   while choice == "hit":
     drawer(choice)
   print_h()
-  dealer_turn(0)
-      
+  dealer_turn()
+
+#to play aging
+def playing():
+  if money>0:
+    ch=input("do you want to play again?\n")
+    if ch=="yes" or ch=="y":
+      #resets the deck and everything else
+      hand_see.clear()
+      ace_hand=0
+      dealer_see.clear()
+      ace_dealer=0
+      num_hand.clear()
+      num_dealer.clear()
+      main()
+    else:
+      print("thanks for playing")
+      exit()
+  else:
+    print("you have no money left bye")
+    exit()
+
+#stars the game
 def main():
   global money
   global bet
   print("ready to play blackjack \n")
-  t.sleep(2)
+  t.sleep(1)
   print("you have",money,"dollars \n")
-  t.sleep(2)
+  t.sleep(1)
   bet=int(input("how much do you want to bet \n"))
   while bet > money:
     print("you dont have that much money \n")
@@ -363,13 +382,11 @@ def main():
   dealer_draw()
   print("drawing cards")
   dealer_see.append("?")
-  t.sleep(2)
+  t.sleep(1)
   print_d()
-  t.sleep(2)
+  t.sleep(1)
   print_h()
-  t.sleep(2)
+  t.sleep(1)
   player_turn()
 
-main()  
-
-  
+main()
