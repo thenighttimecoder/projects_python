@@ -31,6 +31,11 @@ card_list_type=[
   "♠♠"
 ]
 
+#the list of the face cards
+face_card_list=[
+  "J","Q","K"
+]
+
 #money
 money=100
 bet=0
@@ -58,6 +63,11 @@ def suffle_card():
   c.deepcopy(save_card_list_4)
   t.sleep(2)
   print("shuffle done")
+
+#the function to pick a face card style
+def random_face_card():
+  face_picker=r.randint(1,3)
+  return face_picker
 
 #to get which list to use
 def random_3():
@@ -106,6 +116,7 @@ def hand_draw():
   global ace_hand
   deck_list_picker=random_3()
   card_pick=random_12()
+  face_picker=random_face_card()
   #adds the card to the hand
   if card_pick is not None:
     #to check if the card is an ace
@@ -116,7 +127,14 @@ def hand_draw():
         hand_see.append("aces")
         ace_hand=ace_hand+1
         num_hand.append(1)
+        #pops the card from the chosen list to make it have fewer cards
         card_list_1.pop(card_pick-1)
+        #picks the face card to be added
+      if card_list_1[face_picker-1]==10:
+        hand_see.append(card_list_type[deck_list_picker])
+        hand_see.append(face_card_list[face_picker-1])
+        num_hand.append(10)
+        card_list_1.pop(face_picker-1)
       else:
         hand_see.append(card_list_type[deck_list_picker])
         #adds the card from the chosen list to the hand
@@ -133,6 +151,12 @@ def hand_draw():
         num_hand.append(1)
         #pops the card from the chosen list to make it have fewer cards
         card_list_2.pop(card_pick-1)
+        #picks the face card to be added
+      if card_list_2[face_picker-1]==10:
+        hand_see.append(card_list_type[deck_list_picker])
+        hand_see.append(face_card_list[face_picker-1])
+        num_hand.append(10)
+        card_list_2.pop(face_picker-1)
       else:
         hand_see.append(card_list_type[deck_list_picker])
         #adds the card from the chosen list to the hand
@@ -149,6 +173,12 @@ def hand_draw():
         num_hand.append(1)
         #pops the card from the chosen list to make it have fewer cards
         card_list_3.pop(card_pick-1)
+        #picks the face card to be added
+      if card_list_3[face_picker-1]==10:
+        hand_see.append(card_list_type[deck_list_picker])
+        hand_see.append(face_card_list[face_picker-1])
+        num_hand.append(10)
+        card_list_3.pop(face_picker-1)
       else:
         hand_see.append(card_list_type[deck_list_picker])
         #adds the card from the chosen list to the hand
@@ -165,6 +195,12 @@ def hand_draw():
         num_hand.append(1)
         #pops the card from the chosen list to make it have fewer cards
         card_list_4.pop(card_pick-1)
+      #picks the face card to be added
+      if card_list_4[face_picker-1]==10:
+        hand_see.append(card_list_type[deck_list_picker])
+        hand_see.append(face_card_list[face_picker-1])
+        num_hand.append(10)
+        card_list_4.pop(face_picker-1)
       else:
         hand_see.append(card_list_type[deck_list_picker])
         #adds a card from the choice list to hand
@@ -181,6 +217,7 @@ def dealer_draw():
   global bet
   deck_list_picker=random_3()
   card_picker=random_12()
+  face_picker=random_face_card()
   #if statement to get the list choice
   if card_picker is not None:
     if deck_list_picker==0:
@@ -192,6 +229,11 @@ def dealer_draw():
         num_dealer.append(1)
         card_list_1.pop(card_picker-1)
         ace_dealer=ace_dealer+1 
+      if card_list_1[face_picker-1]==10:
+        dealer_see.append(card_list_type[deck_list_picker])
+        dealer_see.append(face_card_list[face_picker-1])
+        num_dealer.append(10)
+        card_list_1.pop(face_picker-1)
       else:
         dealer_see.append(card_list_type[deck_list_picker])
         #adds the card from the chosen list to the hand
@@ -207,6 +249,11 @@ def dealer_draw():
         num_dealer.append(1)
         #pops the card from the chosen list to make it have fewer cards
         card_list_2.pop(card_picker-1)
+      if card_list_2[face_picker-1]==10:
+        dealer_see.append(card_list_type[deck_list_picker])
+        dealer_see.append(face_card_list[face_picker-1])
+        num_dealer.append(10)
+        card_list_2.pop(face_picker-1)
       else:
         dealer_see.append(card_list_type[deck_list_picker])
         #adds the card from the chosen list to the hand
@@ -222,6 +269,11 @@ def dealer_draw():
         num_dealer.append(1)
         #pops the card from the chosen list to make it have fewer cards
         card_list_3.pop(card_picker-1)
+      if card_list_3[face_picker-1]==10:
+        dealer_see.append(card_list_type[deck_list_picker])
+        dealer_see.append(face_card_list[face_picker-1])
+        num_dealer.append(10)
+        card_list_3.pop(face_picker-1)
       else:
         dealer_see.append(card_list_type[deck_list_picker])
         #adds the card from the chosen list to the hand
@@ -237,6 +289,11 @@ def dealer_draw():
         num_dealer.append(1)
         #pops the card from the chosen list to make it have fewer cards
         card_list_4.pop(card_picker-1)
+      if card_list_4[face_picker-1]==10:
+        dealer_see.append(card_list_type[deck_list_picker])
+        dealer_see.append(face_card_list[face_picker-1])
+        num_dealer.append(10)
+        card_list_4.pop(face_picker-1)
       else:
         dealer_see.append(card_list_type[deck_list_picker])
         #adds the card from the chosen list to the hand
@@ -285,7 +342,7 @@ def hand_check(num_hand):
     temp_hand_a=sum(num_hand)+(10*ace_hand)
   #checks to make sure we didn't bust heh
   if (temp_hand >21 and ace_hand ==0) or\
-    (temp_hand > 21 and ace_hand == 0) or (temp_hand_a > 21 and ace_hand>=1) :
+    (temp_hand > 21 and ace_hand == 0) and (temp_hand_a > 21 and ace_hand>=1) :
     print("you lose \n")
     playing()
   else:
