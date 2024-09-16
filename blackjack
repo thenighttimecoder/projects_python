@@ -285,7 +285,7 @@ def hand_check(num_hand):
     temp_hand_a=sum(num_hand)+(10*ace_hand)
   #checks to make sure we didn't bust heh
   if (temp_hand >21 and ace_hand ==0) or\
-  (temp_hand > 21 and ace_hand >=1 and temp_hand_a> 21) :
+    (temp_hand > 21 and ace_hand == 0) or (temp_hand_a > 21 and ace_hand>=1) :
     print("you lose \n")
     playing()
   else:
@@ -311,7 +311,7 @@ def dealer_turn():
     dealer_see.pop()
     i=1+i
   #checks if the dealer has a sum of 17 or more
-  if temp_dealer > 21 or temp_dealer > 17:
+  if temp_dealer > 21:
     print("you win \n")
     money=money+(bet*2)
     playing()
@@ -322,11 +322,18 @@ def dealer_turn():
     money=money+bet
     playing()
   #checks if the dealer has a sum greater than ours and is less than 21
-  elif temp_dealer > temp_hand and temp_dealer < 21:
+  elif temp_dealer > temp_hand and temp_dealer < 21 :
     print("dealer won \n")
     playing()
-  #checks if the dealer has a sum less than ours and is than then 17
-  elif (temp_dealer < temp_hand and temp_dealer < 17):
+  #checks if the dealer has no ace but we do 
+  elif (temp_hand_a <= 21 and ace_hand >=1) > (temp_dealer and ace_dealer ==0) or\
+(temp_hand_a <= 21 and ace_hand ==1) >(temp_dealer_a and ace_dealer >= 1):
+    print("you win \n")
+    money=money+(bet*2)
+    playing()
+  #checks if the dealer has a sum less than ours and is less than 21
+  elif (temp_dealer < temp_hand) and ((temp_dealer < 21) or
+       (temp_dealer_a < 21 and ace_dealer>=1)) :
     dealer_draw()
     t.sleep(1)
     print_d()
